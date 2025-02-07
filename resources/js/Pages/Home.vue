@@ -11,6 +11,8 @@ const props = defineProps({
     searchTerm: String
 });
 
+// To get the name of the user id
+const username = params.user_id ? props.listings.data.find(listing => listing.user_id === Number(params.user_id)).user.name : null;
 const form = useForm({
     search: props.searchTerm
 });
@@ -29,7 +31,27 @@ const search = () =>{
 <template>
     <Head title="- Latest Listings" />
     <div class="flex items-center justify-between mb-4">
-        <div>Filters</div>
+        <div class="flex items-center gap-2">
+            <Link v-if="params.tag" :href="route('home', {... params, tag: null})"
+                class="px-2 py-1 rounded-md bg-indigo-500 text-white flex items-center gap-2"
+            >
+                {{ params.tag }}
+                <i class="fa-solid fa-xmark"></i>
+            </Link>
+            <Link v-if="params.search" :href="route('home', {... params, search: null})"
+                class="px-2 py-1 rounded-md bg-indigo-500 text-white flex items-center gap-2"
+            >
+                {{ params.search }}
+                <i class="fa-solid fa-xmark"></i>
+            </Link>
+            <Link v-if="params.user_id" :href="route('home', {... params, user_id: null})"
+                class="px-2 py-1 rounded-md bg-indigo-500 text-white flex items-center gap-2"
+            >
+                {{ username }}
+                <i class="fa-solid fa-xmark"></i>
+            </Link>
+
+        </div>
 
         <div class="w-1/4">
             <form @submit.prevent="search">

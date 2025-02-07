@@ -17,7 +17,13 @@ class ListingFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+           'user_id' => fake()->randomElement([1,2]),
+           'title' => fake()->sentence(10),
+           'desc' => fake()->paragraph(12),
+           'email' => fake()->email(),
+           'link' => fake()->url(),
+           'tags' => fake()->randomElement(['dev,game','game','biz,tech', 'tech,game,biz']),
+           'approved' => 1
         ];
     }
 }

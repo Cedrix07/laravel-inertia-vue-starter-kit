@@ -9,4 +9,18 @@ class Listing extends Model
 {
     /** @use HasFactory<\Database\Factories\ListingFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        "title",
+        "desc",
+        "tags",
+        "email",
+        "link",
+        "image",
+        "approved"
+    ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

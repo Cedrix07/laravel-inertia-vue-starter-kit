@@ -24,8 +24,12 @@
                     <p class="text-slate-400 w-full border-b">Listing Detail</p>
 
                     <!-- Edit and Delete-->
-                     <div>
-                        edit and delete
+                     <div class="pl-5 flex items-center gap-4">
+                        <Link
+                            :href="route('listing.edit', listing.id )"
+                            class="bg-green-500 rounded-md text-white px-6 py-2 hover:outline outline-green-500 outline-offset-2">
+                            Edit
+                        </Link>
                      </div>
                 </div>
 

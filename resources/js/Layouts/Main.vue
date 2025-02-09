@@ -22,7 +22,7 @@
             <div class="flex items-center space-x-6">
                 <!-------- Auth --------->
                 <div v-if="user" class="relative">
-                    <div 
+                    <div
                         @click="show = !show"
                         class="flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-slate-700 cursor-pointer"
                         :class="{ 'bg-slate-700': show }"
@@ -33,22 +33,26 @@
 
                     <!-------- user dropdown menu --------->
                     <div
-                        v-show="show" 
+                        v-show="show"
                         @click="show=false"
                         class="absolute z-50 top-16 right-0 bg-slate-800 text-white rounded-lg border-slate-80 border overflow-hidden w-40">
-                        <Link 
+                        <Link
+                            :href="route('listing.create')"
+                            class="block w-full px-6 py-3 hover:bg-slate-700 text-left"
+                            > New Listing</Link>
+                        <Link
                             :href="route('profile.edit')"
                             class="block w-full px-6 py-3 hover:bg-slate-700 text-left"
                             > Profile</Link>
-                        <Link 
+                        <Link
                             :href="route('dashboard')"
                             class="block w-full px-6 py-3 hover:bg-slate-700 text-left"
                             > Dashboard</Link>
-                        <Link 
+                        <Link
                             :href="route('logout')"
                             method="post"
                             as="button"
-                            class="block w-full px-6 py-3 hover:bg-slate-700 text-left"> 
+                            class="block w-full px-6 py-3 hover:bg-slate-700 text-left">
                             Logout
                         </Link>
                     </div>
@@ -60,8 +64,8 @@
                     <NavLink routeName="register" componentName="Auth/Register">Register</NavLink>
                 </div>
                 <button
-                    @click="switchTheme" 
-                    class="hover:bg-slate-700 w-6 h-6 grid place-items-center rounded-full hover:outline outline-1 outline-white"> 
+                    @click="switchTheme"
+                    class="hover:bg-slate-700 w-6 h-6 grid place-items-center rounded-full hover:outline outline-1 outline-white">
                     <i class="fa-solid fa-circle-half-stroke"></i>
                 </button>
             </div>

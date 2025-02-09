@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
-use App\Http\Requests\StoreListingRequest;
-use App\Http\Requests\UpdateListingRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Storage;
 
 
 class ListingController extends Controller
@@ -25,7 +24,7 @@ class ListingController extends Controller
                 ->filter(request(['search', 'user_id', 'tag'])) //scope filter from listing model
                 ->latest()
                 ->paginate(6)
-                ->withQueryString(); 
+                ->withQueryString();
 
         return inertia('Home', [
             'listings' => $listings,
@@ -39,15 +38,39 @@ class ListingController extends Controller
      */
     public function create()
     {
-
+        return inertia('Listing/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreListingRequest $request)
+    public function store(Request $request)
     {
-        //
+        // $newTags = explode(',', $request->tags); // Split tags
+        // $newTags = array_map('trim', $newTags); // Remove leading/trailing spaces
+        // $newTags = array_filter($newTags); // Remove empty tags
+        // $newTags = array_unique($newTags); // Remove duplicate tags
+        // $newTags = implode(',', $newTags); // Rejoin tags
+
+        $fields = $request->validate([
+            'title' => ['required', 'max:255'],
+            'desc' => ['required'],
+            'tags' => ['nullable', 'string'],
+            'email' => ['nullable', 'email'],
+            'link' => ['nullable', 'url'],
+            'image' => ['nullable', 'file', 'max:3072', 'mimes:jpeg,jpg,png,webp'],
+        ]);
+
+        if($request->hasFile('image')) {
+            $fields['image'] = Storage::disk('public')->put('/images/listing', $request->image); // save image to storage
+        }
+
+        // Fixing tags format before storing in database
+        $fields['tags'] = implode(',', array_unique(array_filter(array_map('trim', explode(',', $request->tags)))));
+
+        $request->user()->listings()->create($fields);
+
+        return redirect()->route('dashboard')->with('status', 'Listing created successfully!');
     }
 
     /**
@@ -69,7 +92,7 @@ class ListingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateListingRequest $request, Listing $listing)
+    public function update(Request $request, Listing $listing)
     {
         //
     }

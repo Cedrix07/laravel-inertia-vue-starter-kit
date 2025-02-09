@@ -7,11 +7,11 @@ import ImageUpload from '../../Components/ImageUpload.vue';
 import ErrorMessages from '../../Components/ErrorMessages.vue';
 import PrimaryBtn from '../../Components/PrimaryBtn.vue';
 import { useForm } from '@inertiajs/vue3';
+import { list } from 'postcss';
 
 const props = defineProps({
     listing: Object
 });
-
 
 const form = useForm({
     title: props.listing.title,
@@ -20,10 +20,11 @@ const form = useForm({
     email: props.listing.email,
     link: props.listing.link,
     image: null,
+    _method: 'PUT'
 });
 
 const submit = () =>{
-    form.post(route('listing.store'));
+    form.post(route('listing.update', props.listing.id)); // will override the method to put _method: 'PUT'
 }
 
 </script>
@@ -69,7 +70,7 @@ const submit = () =>{
                     placeholder="https://example.com"
                     v-model="form.link"
                 />
-                
+
                 <!-- Calling the custom event I created in the ImageUpload component -->
                 <ImageUpload @image="(e)=> form.image = e"
                     :listingImage="listing.image"

@@ -24,6 +24,7 @@ const revertImageChange = () =>{
     showRevertBtn.value = false;
     preview.value=currentImage;
     oversizedImage.value = false;
+    emit('image', null); // To prevent the image from being sent if it's reverted
 }
 
 </script>

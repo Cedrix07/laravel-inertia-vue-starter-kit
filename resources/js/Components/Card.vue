@@ -29,7 +29,7 @@ const selectUser = (id) =>{
     <div class="bg-white rounded-lg shadow-lg overflow-hidden dark:bg-slate-800 h-full flex flex-col justify-between">
         <!-- Image -->
 
-         <Link href="">
+         <Link :href="route('listing.show', listing.id)">
             <!-- Make sure to create a symbolic link first-->
             <img
                 :src="listing.image ? `/storage/${listing.image}` : '/storage/images/listing/default.png'"

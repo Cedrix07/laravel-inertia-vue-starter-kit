@@ -66,7 +66,7 @@ class ListingController extends Controller
         }
 
         // Fixing tags format before storing in database
-        $fields['tags'] = implode(',', array_unique(array_filter(array_map('trim', explode(',', $request->tags)))));
+        $fields['tags'] = implode(',', array_unique(array_filter(array_map('trim', explode(',',  $request->tags)))));
 
         $request->user()->listings()->create($fields);
 
@@ -78,7 +78,10 @@ class ListingController extends Controller
      */
     public function show(Listing $listing)
     {
-        //
+        return inertia('Listing/Show', [
+            "listing" => $listing,
+            "user" => $listing->user->only(['name', 'id']) // passed name and id only
+        ]);
     }
 
     /**
@@ -86,7 +89,7 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
-        //
+
     }
 
     /**

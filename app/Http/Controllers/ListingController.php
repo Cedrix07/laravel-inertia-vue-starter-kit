@@ -14,17 +14,13 @@ use Illuminate\Support\Facades\Storage;
 
 class ListingController extends Controller implements HasMiddleware
 {
-    public static function middleware()
-    {
+    public static function middleware(){
         return [
-            new Middleware(
-                ['auth', 'verified', NotSuspended::class], 
-                except: ['index', 'show'])
+            new Middleware(['auth', 'verified', NotSuspended::class], // Can call the custom middleware NotSuspended
+            except:['index', 'show'])
         ];
     }
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
 
@@ -41,7 +37,6 @@ class ListingController extends Controller implements HasMiddleware
         return inertia('Home', [
             'listings' => $listings,
             'searchTerm' => $request->search,
-
         ]);
     }
 
@@ -50,7 +45,6 @@ class ListingController extends Controller implements HasMiddleware
      */
     public function create()
     {
-
         Gate::authorize('create', Listing::class);
         return inertia('Listing/Create');
     }
@@ -92,11 +86,13 @@ class ListingController extends Controller implements HasMiddleware
      */
     public function show(Listing $listing)
     {
-        // Call the Listing Policy view using GATE 
+        // Calling Listing Policy, view method using Gate Facade
         Gate::authorize('view', $listing);
+
         return inertia('Listing/Show', [
             "listing" => $listing,
-            "user" => $listing->user->only(['name', 'id']) // passed name and id only
+            "user" => $listing->user->only(['name', 'id']), // passed name and id only
+            "canModify" => auth()->user() ? auth()->user()->can('modify', $listing) : false, // pass as props if user can modify the record
         ]);
     }
 
@@ -137,7 +133,8 @@ class ListingController extends Controller implements HasMiddleware
 
         $fields['tags'] = implode(',', array_unique(array_filter(array_map('trim', explode(',',  $request->tags)))));
 
-        $listing->update($fields);
+        // Update the listing and set the approved to false to wait for admin approval
+        $listing->update([...$fields, 'approved'=> false]);
 
         return redirect()->route('dashboard')->with('status', 'Listing updated successfully!');
     }
@@ -148,6 +145,13 @@ class ListingController extends Controller implements HasMiddleware
     public function destroy(Listing $listing)
     {
         Gate::authorize('modify', $listing);
-        
+        // If listing has image, Delete image from storage
+       if($listing->image) {
+            Storage::disk('public')->delete($listing->image);
+       }
+
+       $listing->delete();
+
+       return redirect()->route('dashboard')->with('status', 'Listing deleted successfully!');
     }
 }

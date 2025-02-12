@@ -15,10 +15,11 @@ class NotSuspended
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->user()->role === "suspended") {
+        // if user is suspended
+        if($request->user()->role === 'suspended') {
             return redirect()->route('dashboard');
         }
-        
+
         return $next($request);
     }
 }

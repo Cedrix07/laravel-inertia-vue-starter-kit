@@ -9,7 +9,10 @@ class AdminController extends Controller
 {
     public function index(){
 
-        $users = User::with('listings')->paginate(10);
+        $users = User::with('listings')
+            ->filter(request(['search', 'user_role'])) //scope filter from user model
+            ->paginate(10)
+            ->withQueryString();
 
         return inertia('Admin/AdminDashboard',[
             'users' => $users,

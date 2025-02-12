@@ -15,6 +15,18 @@
 </script>
 <template>
     <Head title="- Listing Detail"/>
+    <!-- Admin -->
+    <div v-if="$page.props.auth.user.role === 'admin'"
+        class="bg-slate-800 text-white mb-6 p-6 rounded-md font-medium flex items-center justify-between"
+    >
+    <p>This Listin is {{ listing.approved ? 'Approved' : 'Dissapproved' }}</p>
+    <button class="bg-slate-600 px-3 py-1 rounded-md">
+        {{ listing.approved ? 'Dissaprove it' : 'Approve it' }}
+    </button>
+    </div>
+
+
+
     <Container class="flex gap-4">
         <div class="w-1/4 rounded-md overflow-hidden">
             <img

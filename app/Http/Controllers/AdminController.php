@@ -29,4 +29,12 @@ class AdminController extends Controller
 
         return redirect()->route('admin.index')->with('status', "User role changed to {$request->role} successfully");
     }
+
+    public function show(User $user){
+        $user_listings = $user->listings()->latest()->paginate(10);
+        return inertia('Admin/UserPage', [
+            'user' => $user,
+            'listings' => $user_listings
+        ]);
+    }
 }

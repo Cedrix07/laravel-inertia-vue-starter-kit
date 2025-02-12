@@ -59,7 +59,6 @@ class ListingController extends Controller implements HasMiddleware
         // $newTags = array_filter($newTags); // Remove empty tags
         // $newTags = array_unique($newTags); // Remove duplicate tags
         // $newTags = implode(',', $newTags); // Rejoin tags
-
         Gate::authorize('create', Listing::class);
         $fields = $request->validate([
             'title' => ['required', 'max:255'],
